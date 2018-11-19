@@ -14,6 +14,10 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -28,9 +32,12 @@ string changeHistoName(string name, string suff){
 	return sname;
 }
 
-//recompile:
-//root -b -l -q MakeAllDCsyst.C++
-void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11", string outdir = "datacards_syst/", string systTypes="nominal,scaleuncUp,scaleuncDown,isruncUp,isruncDown,triguncUp,triguncDown,btagSFuncUp,btagSFuncDown,mistagSFuncUp,mistagSFuncDown,isotrackuncUp,isotrackuncDown,lumiuncUp,lumiuncDown", string varTypes="JECup,JECdown,JERup,JERdown"){
+int forkInfo(string prefix = "") {
+        printf("%sMy pid is:%d  my ppid is %d\n", prefix.c_str(), getpid(), getppid());
+        return 0;
+}
+
+void RunRegion(int mode=-1, string region="signal", string setname="", string indir="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12", string outdir = "", string systTypes="nominal,scaleuncUp,scaleuncDown,isruncUp,isruncDown,triguncUp,triguncDown,btagSFuncUp,btagSFuncDown,mistagSFuncUp,mistagSFuncDown,isotrackuncUp,isotrackuncDown,lumiuncUp,lumiuncDown", string varTypes="JECup,JECdown,JERup,JERdown", bool dryrun = false){
 	gErrorIgnoreLevel = kBreak;
 	
 	if(mode==-1){
@@ -40,9 +47,8 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	
 	if(indir[indir.size()-1] != '/') indir = indir + "/";
 	string inpre = "tree_";
-	string region = "signal";
 	string outpre = "RA2bin_";
-	string input = "input/input_RA2bin_DC_syst.txt";
+	string input = "input/input_RA2bin_DC_systbkg.txt";
 	//string inputQCD = "input/input_RA2bin_DC_QCD.txt";
 	string setlist = "";
 	string osuff = "";
@@ -52,15 +58,13 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	KParser::process(varTypes,',',vars);
 	
 	if(mode==1){
-		if (outdir.find("datacards_fast")==string::npos) {
-			outdir = "datacards_fast/"+outdir;
-		}
+		outdir = (outdir.size()>0) ? outdir : "datacards_fast/";
 		setlist = "input/fast/input_set_DC_"+setname+".txt";
 		osuff = "_"+setname;
 	}
 	else {
-		//outdir = "datacards_syst/";
-		setlist = "input/input_set_DC_"+setname+".txt";
+		outdir = (outdir.size()>0) ? outdir : "datacards_syst/";
+		setlist = "input/input_sets_DC_v2.txt";
 		osuff = "_"+setname;
 	}
 	
@@ -71,11 +75,19 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	vector<string> rootfiles;
 	
 	//do the simple systematics all at once
-	rootfiles.push_back(outdir+outpre+region+osuff+"_tmp");
-	KPlotDriver(indir+inpre+region,{input,setlist},{"OPTION","string:rootfile["+rootfiles.back()+"]","vstring:selections["+systTypes+"]"});
-	
+	rootfiles.push_back(outdir+outpre+region+osuff);
+	cout << "KPlotDriver(" << indir+inpre+region << ",{" << input << "," << setlist << "},{\"OPTION\",\"string:rootfile[\"+" << rootfiles.back() << "+\"]\",\"vstring:selections[\"+" << systTypes << "+\"]\"});" << endl;
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	//forkInfo("Inside Child: ");
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	//forkInfo("Inside Child: ");
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	//forkInfo("Inside Child: ");
+	if(!dryrun) KPlotDriver(indir+inpre+region,{input,setlist},{"OPTION","string:rootfile["+rootfiles.back()+"]","vstring:selections["+systTypes+"]"});
+
 	//do the full variations separately
 	//produce a selection for each variation on the fly, cloned from nominal
+/*	
 	for(auto& ivar : vars){
 		//change region
 		string region_ = region + "_"+ivar;
@@ -86,7 +98,7 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	//hadd
 	stringstream slist;
 	copy(rootfiles.begin(),rootfiles.end(),ostream_iterator<string>(slist,".root "));
-	string therootfile = outdir+outpre+region+osuff+".root";
+	string therootfile = outpre+region+osuff+".root";
 	string cmd = "hadd -f "+therootfile+" "+slist.str();
 	system(cmd.c_str());
 	
@@ -215,4 +227,54 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	nominal->Write();
 	for(auto isyst : hsyst) isyst->Write();
 	outfile->Close();
+*/
+}
+
+//Forking based on:
+// https://www.linuxquestions.org/questions/programming-9/create-n-child-processes-fork-629832/
+// https://timmurphy.org/2014/04/26/using-fork-in-cc-a-minimum-working-example/
+// https://stackoverflow.com/questions/19461744/make-parent-wait-for-all-child-processes-to-finish
+//recompile:
+//root -b -l -q MakeAllDCsyst.C++
+//run:
+//root -b -l -q 'MakeAllDCBkg.C+(0,"signal,SLe","TotalBkg","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12","tmp/","nominal","",true)'
+//root -b -l -q 'MakeAllDCBkg.C+(0,"signal,SLe,SLm,LDP,DYe_CleanVars,DYm_CleanVars,GJet_CleanVars","TotalBkg","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12","tmp/","nominal","",false)'
+int MakeAllDCBkg(int mode=-1, string regions="signal,SLe,SLm,LDP,DYe_CleanVars,DYm_CleanVars,GJet_CleanVars", string setname="",
+                  string indir="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12",
+                  string outdir = "",
+                  string systTypes="nominal,scaleuncUp,scaleuncDown,isruncUp,isruncDown,triguncUp,triguncDown,btagSFuncUp,btagSFuncDown,mistagSFuncUp,mistagSFuncDown,isotrackuncUp,isotrackuncDown,lumiuncUp,lumiuncDown",
+                  string varTypes="JECup,JECdown,JERup,JERdown",
+                  bool dryrun = false){
+	printf("--beginning of program--\n");
+
+	int status=0;
+	pid_t wpid;
+
+	//process regions - comma-separated input, need to be run separately
+	vector<string> regs;
+	KParser::process(regions,',',regs);
+
+	for(auto reg : regs) {
+		pid_t pid=fork();
+		if (pid==0) {/* only execute this if child */
+			// child process
+			if (dryrun) forkInfo("Child: ");
+			RunRegion(mode,reg,setname,indir,outdir,systTypes,varTypes,dryrun);
+			exit(0);
+		}
+		else if (pid > 0) {
+			// parent process
+			if (dryrun) forkInfo("Parent: ");
+		}
+		else {
+	        // fork failed
+        	printf("fork() failed!\n");
+        	return 1;
+    	}
+	}
+
+	while ((wpid = wait(&status)) > 0); // this way, the parent waits for all the child processes 
+
+	printf("--end of program--\n");
+	return 0;
 }
