@@ -129,20 +129,22 @@ if __name__ == "__main__":
 
     # Read parameters
     parser = argparse.ArgumentParser(description='Make a WPTable.')
+    #parser.add_argument("-d", "--xsec_dict",      default={},          type=json.loads, help="Dictionary of files containing the model cross sections in case a conversion is needed (default = {%default})")
+    parser.add_argument("-d", "--xsec_dict",      action=StoreDictKeyPair,  nargs="+", metavar="KEY=VAL", help="Dictionary of files containing the model cross sections in case a conversion is needed (default = %(default)s)")
     parser.add_argument("-D", "--debug",          action='store_true',                  help="Show extra printouts needed for debugging (default = %(default)s)")
     parser.add_argument("-i", "--indir",          default='CMS-SUS-16-033/',            help="Directory containing the input ROOT files (default = %(default)s)")
     parser.add_argument("-M", "--model",          default=["T1tttt"],        nargs='+', help="The signal model (default = %(default)s)")
     parser.add_argument("-m", "--mass",           default=["2100_100"],      nargs='+', help="The gluino and neutralino masses (default = %(default)s)")
     parser.add_argument("-n", "--ncolumns",       default=2,                 type=int,  help="The number of working points (default = %(default)s)")
-    parser.add_argument("-o", "--output",         default="./WPTable.txt",              help="Output folder (default = %(default)s)")
+    parser.add_argument("-o", "--output",         default="",                           help="Path and name of the text file to store the result (default = %(default)s)")
+
     result = parser.add_mutually_exclusive_group(required=True)
     result.add_argument(      "--result_2016",    action='store_true',                  help="Form table from 2016 result files (default = %(default)s)")
     result.add_argument("-c", "--combine_result", action='store_true',                  help="Form table from the output of combine (default = %(default)s)")
+
     method = parser.add_mutually_exclusive_group(required=True)
     method.add_argument("-x", "--xsec",           action='store_true',                  help="Return the result using cross section values (default = %(default)s)")
     method.add_argument("-s", "--sig",            action='store_true',                  help="Return the result using signal strength values (default = %(default)s)")
-    #parser.add_argument("-d", "--xsec_dict",      default={},          type=json.loads, help="Dictionary of files containing the model cross sections in case a conversion is needed (default = {%default})")
-    parser.add_argument("-d", "--xsec_dict",      action=StoreDictKeyPair,  nargs="+", metavar="KEY=VAL", help="Dictionary of files containing the model cross sections in case a conversion is needed (default = %(default)s)")
     
     args, unknown = parser.parse_known_args()
 
@@ -159,6 +161,7 @@ if __name__ == "__main__":
 
     print table
 
-    fout = open(args.output,'w')
-    fout.write(table)
-    fout.close()
+    if args.output != "":
+         fout = open(args.output,'w')
+         fout.write(table)
+         fout.close()
