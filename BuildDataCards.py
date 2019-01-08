@@ -18,9 +18,27 @@ ZinvStatDict = [
     (118, 1.10),
     (126, 1.20),
     (174, 1.50),
-
 ]
 ZinvStatDict.sort() # list must be sorted
+ZinvStatDict_ModifiedNBJet_Variation3 = [
+    (10, 1.10),
+    (20, 1.10),
+    (30, 1.35),
+    (40, 1.10),
+    (50, 1.10),
+    (60, 1.20),
+    (70, 1.50),
+    (80, 1.50), #NB=4
+    (90, 1.10),
+    (100, 1.10),
+    (110, 1.30),
+    (120, 1.50),
+    (130, 1.50), #NB=4
+    (138, 1.10),
+    (146, 1.20),
+    (210, 1.50), #Includes NB=4
+]
+ZinvStatDict_ModifiedNBJet_Variation3.sort() # list must be sorted
 ZinvStatLumiValue = 35900.0 # Luminosity at which these values were measured
 
 def which(program):
@@ -85,7 +103,13 @@ def BuildDataCards(options_model_mass):
         if(SLControlYields.GetBinContent(i)>0):fout.write("LLLepStat_%d lnN - %2.2f - - \n" %(i,1.0+SLControlYields.GetBinError(i)/SLControlYields.GetBinContent(i)))
         else:fout.write("LLLepStat_%d gmN 0 - %2.2f - - \n" %(i,SLControlTF.GetBinContent(i)))
         if luminosity != ZinvStatLumiValue:
-            ZinvStatUnc = 1.0+((ZinvStatDict[bisect.bisect_right(ZinvStatDict, (i,))][1] - 1.0) * sqrt(ZinvStatLumiValue/luminosity))
+            if ZInv.GetNbinsX() == 174:
+                ZinvStatUnc = 1.0+((ZinvStatDict[bisect.bisect_right(ZinvStatDict, (i,))][1] - 1.0) * sqrt(ZinvStatLumiValue/luminosity))
+            elif ZInv.GetNbinsX() == 210:
+                ZinvStatUnc = 1.0+((ZinvStatDict_ModifiedNBJet_Variation3[bisect.bisect_right(ZinvStatDict_ModifiedNBJet_Variation3, (i,))][1] - 1.0) * sqrt(ZinvStatLumiValue/luminosity))
+            else:
+                print "ERROR::BuildDataCards Unknown NBinX variation. Cannot determine the ZinvStatUnc."
+                exit(-1)                
         else:
             ZinvStatUnc = ZinvStatDict[bisect.bisect_right(ZinvStatDict, (i,))][1]
         fout.write("ZinvStat_%d lnN - - %2.2f - \n" %(i,ZinvStatUnc)) #Estimation based on Figure 40 in AN-2016/350
