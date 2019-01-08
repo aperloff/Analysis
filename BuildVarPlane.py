@@ -289,11 +289,18 @@ def LinePar(s):
 if __name__ == "__main__":
 	'''
 	Examples of how to run:
-	python BuildHTMHTPlane.py
+	           2016: python BuildVarPlane.py -i input/input_RA2bin_options_original.txt -s plane_2016.pdf
+	NJets3_MHT1_HT2: python BuildVarPlane.py -i input/input_RA2bin_options_Combination_NJet3_MHT1_HT2.txt -s plane_NJet3_MHT1_HT2.pdf -M 11 3 1100 2200
+	NJets3_MHT1_HT3: python BuildVarPlane.py -i input/input_RA2bin_options_Combination_NJet3_MHT1_HT3.txt -s plane_proposed.pdf -c HT,MHT,1.0,0.0 -M 11 3 1100 2200
+
+	VarMax by configuration:
+	           2016: 10 3 1000 2100
+	NJets3_MHT1_HT2: 11 3 1100 2200
+	NJets3_MHT1_HT3: 11 3 1100 2200
 	'''
 
 	# Read parameters
-	parser = argparse.ArgumentParser(description='Make a WPTable.')
+	parser = argparse.ArgumentParser(description='Draw the bin variable planes.')
 	parser.add_argument("-c", "--cutline",        type=LinePar, nargs='+',                       help="Add a line showing a cut along the plane with slope and y-intercept (default = %(default)s)")
 	parser.add_argument("-d", "--debug",          action='store_true',                           help="Print extra debugging options (default = %(default)s)")
 	parser.add_argument("-i", "--infile",         default='input/input_RA2bin_options.txt',      help="File containing the input bin mapping (default = %(default)s)")
