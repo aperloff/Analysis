@@ -77,6 +77,7 @@ def make_bkg_systematics(indir, outdir, suffix, lumi):
     LDPYields.Scale(lumi);
 
     finGJets=TFile(indir+"RA2bin_GJet_CleanVars_TotalBkg.root","READ");
+    GJetsYields=finGJets.Get("RA2bin_GJets_nominal");
     finDY=TFile(indir+"RA2bin_DY_CleanVars_TotalBkg.root","READ");
     DYYields=finDY.Get("RA2bin_DY_nominal");
     DYYields.Scale(lumi);
@@ -124,6 +125,7 @@ def make_bkg_systematics(indir, outdir, suffix, lumi):
     #Total.Draw("e2same");
     c1.Print("TestStack.pdf");
     output.cd();
+    GJetsYields.Write("GJetsControl");
     DYYields.Write("DYControl");
     TFDY.Write("TFDY");
     TFLowDphi.Write("TFLowDphi");
