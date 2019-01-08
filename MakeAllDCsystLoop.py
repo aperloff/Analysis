@@ -42,7 +42,9 @@ if __name__ == "__main__":
 	args, unknown = parser.parse_known_args()
 	
 	if len(args.mass)==0:
-		mass_point_files = [os.path.split(x)[1] for x in glob.glob("input/fast/*") if args.setname in x]
+		mass_point_files = []
+		for setname in args.setname:
+			mass_point_files += [os.path.split(x)[1] for x in glob.glob("input/fast/*") if setname in x]
 		mass_points = [x.split("_")[3]+"_"+x.split("_")[4]+"_"+x.split("_")[5]+"_"+x.split("_")[6].split(".")[0] for x in mass_point_files]
 	else:
 		mass_points = [args.setname[ix]+"_"+x+"_fast" for ix, x in enumerate(args.mass)]
