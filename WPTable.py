@@ -27,6 +27,12 @@ def FormModelMassDict(models, masses):
         d[model].append(masses[imodel])
     return d
 
+def GetColumns(ncolumns):
+    d = DefaultOrderedDict(list)
+    for c in range(1,ncolumns+1):
+        d["WP%i" % c] = []
+    return d
+
 def MakeXSecDict(file):
     d = {}
     with open(file) as f:
@@ -42,8 +48,9 @@ def MakeDataframe(column_dict, indices):
 def MakeTable(df):
     latex_table = df.round(4).to_latex().replace('toprule','hline').replace('midrule','hline') \
                                         .replace('bottomrule','hline').replace('lrr','|l|c|c|') \
-                                        .replace('{}','\\textbf{Model}').replace('WP1','\\textbf{WP1}') \
-                                        .replace('WP2','\\textbf{WP2}')
+                                        .replace('{}','\\textbf{Model}')
+    for c in range(1,len(df.columns)+1):
+        latex_table = latex_table.replace('WP%i'%c,'\\textbf{WP%i}'%c)
     index = latex_table.find('\hline')
     latex_table = latex_table[:index] + '\hline\n{} & \multicolumn{2}{c|}{\\textbf{Mass Point}} \\\\\n' + latex_table[index:]
     return latex_table
@@ -80,7 +87,7 @@ def WPTable2016(model_mass_dict, args):
 def WPTable(args):
     convert = True if args.xsec and not args.sig else False
 
-    column_dict = DefaultOrderedDict(list,{'WP1': [], 'WP2' : []})
+    column_dict = GetColumns(args.ncolumns)
     for model,masses in model_mass_dict.iteritems():
         xsec_dict = MakeXSecDict(args.xsec_dict[model])
         for imass, mass in enumerate(masses):
@@ -126,6 +133,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--indir",          default='CMS-SUS-16-033/',            help="Directory containing the input ROOT files (default = %(default)s)")
     parser.add_argument("-M", "--model",          default=["T1tttt"],        nargs='+', help="The signal model (default = %(default)s)")
     parser.add_argument("-m", "--mass",           default=["2100_100"],      nargs='+', help="The gluino and neutralino masses (default = %(default)s)")
+    parser.add_argument("-n", "--ncolumns",       default=2,                 type=int,  help="The number of working points (default = %(default)s)")
     parser.add_argument("-o", "--output",         default="./WPTable.txt",              help="Output folder (default = %(default)s)")
     result = parser.add_mutually_exclusive_group(required=True)
     result.add_argument(      "--result_2016",    action='store_true',                  help="Form table from 2016 result files (default = %(default)s)")
