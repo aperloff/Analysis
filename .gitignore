@@ -37,6 +37,7 @@
 *.png
 *.zip
 *.eps
+*.pdf
 
 # Folders
 tree*/
