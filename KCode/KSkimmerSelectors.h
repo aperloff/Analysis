@@ -229,44 +229,6 @@ class KElectronSelector : public KSelector {
 REGISTER_SELECTOR(Electron);
 
 //------------------------------------------------------
-//single photon selector
-class KPhotonSelector : public KSelector {
-	public:
-		//constructor
-		KPhotonSelector() : KSelector() { }
-		KPhotonSelector(string name_, OptionMap* localOpt_) : KSelector(name_,localOpt_) {
-			//check option
-			loose = localOpt->Get("loose",true);
-			veto = localOpt->Get("veto",false);
-			trigger = localOpt->Get("trigger",false);
-		}
-		
-		//this selector doesn't add anything to tree
-		
-		//used for non-dummy selectors
-		virtual bool Cut() {
-			int NumPhotons = 0;
-			if(loose){
-				NumPhotons = looper->Photons->size();
-			}
-			else{
-				//tighten up ID
-				for(unsigned p = 0; p < looper->Photons->size(); ++p){
-					if(looper->Photons_fullID->at(p) and (!trigger || looper->Photons->at(p).Pt()>200)) ++NumPhotons;
-				}
-			}
-			
-			return NumPhotons==(veto? 0 : 1);
-		}
-		
-		//member variables
-		bool loose;
-		bool veto;
-		bool trigger;
-};
-REGISTER_SELECTOR(Photon);
-
-//------------------------------------------------------
 //dimuon selector
 class KDiMuonSelector : public KSelector {
 	public:
@@ -516,6 +478,7 @@ class KEventCleaningSelector : public KSelector {
 			doMuonJet = localOpt->Get("MuonJet",false);
 			doFakeJet = localOpt->Get("FakeJet",false);
 			doHTRatio = localOpt->Get("HTRatio",false);
+            doHTDPhiCut = localOpt->Get("HTDPhi",false);
 		}
 		virtual void CheckBase(){
 			//check if fastsim
@@ -574,13 +537,22 @@ class KEventCleaningSelector : public KSelector {
 					if(looper->Jets->at(j).Pt() <= 30 || fabs(looper->Jets->at(j).Eta())>=5.0) continue;
 					HT5 += looper->Jets->at(j).Pt();
 				}
-				if(doHTRatio and HT5/looper->HT > 2.0) goodEvent = false;
+				//if(doHTRatio and HT5/looper->HT > 2.0) goodEvent = false;
+                if(doHTRatio){
+                   if(!doHTDPhiCut and HT5/looper->HT > 2.0) goodEvent = false;
+                   if(doHTDPhiCut and looper->DeltaPhi1 < ((1.025*HT5/looper->HT)-0.5875)) goodEvent = false;
+                   //line slope from: https://indico.cern.ch/event/769759/contributions/3198262/attachments/1744238/2823253/HT5_noisyForwardJets.pdf
+                   //x1 = 1.5 y1 = 0.95
+                   //x2 = 3.5 y2 = 3.0
+                   //slope = (3-0.95)/(3.5-1.5) = 1.025
+                   //y = mx + b == > 0.95 = 1.025 *1.5 + b == > b = -0.5875
+                }
 			}
 			return goodEvent;
 		}
 		
 		//member variables
-		bool doJetID, doMETRatio, doMuonJet, doFakeJet, doHTRatio;
+        bool doJetID, doMETRatio, doMuonJet, doFakeJet, doHTRatio, doHTDPhiCut;
 		double HT5;
 };
 REGISTER_SELECTOR(EventCleaning);
