@@ -15,6 +15,7 @@ class RA2BinSelector():
 		self.RA2bins = []
 		self.RA2binVec = []
 		self.IDtoBinNumber = DefaultOrderedDict(list)
+		self.RA2BinNumberToID = DefaultOrderedDict(list)
 		self.RA2VarMin = []
 		self.RA2VarMax = []
 		self.ParseInputFile()
@@ -61,8 +62,20 @@ class RA2BinSelector():
 
 	def GetBin(self, qty_name, bin_num):
 		for ivar,name in enumerate(self.RA2VarNames):
-			if name==qty_name:
+			if name == qty_name:
 				return bin_num[ivar]
+		return -1
+
+	def GetBinMax(self, qty_name, bin_num):
+		for ivar,name in enumerate(self.RA2VarNames):
+			if name == qty_name:
+				return self.RA2VarMax[ivar][bin_num[ivar]]
+		return -1
+
+	def GetBinMin(self, qty_name, bin_num):
+		for ivar,name in enumerate(self.RA2VarNames):
+                        if name == qty_name:
+		                return self.RA2VarMin[ivar][bin_num[ivar]]
 		return -1
 
 	def GetBinNumbers(self):
@@ -112,6 +125,11 @@ class RA2BinSelector():
 		x_intersection = (b2 - b1) / (m1 - m2)
 		y_intersection = ((m1*b2) - (m2*b1)) / (m1 - m2)
 		return (x_intersection, y_intersection)
+
+	def GetMaximums(self, bins):
+		return [self.RA2VarMax[ivar][bins[ivar]] for ivar,name in enumerate(self.RA2VarNames)]
+	def GetMinimums(self, bins):
+		return [self.RA2VarMin[ivar][bins[ivar]] for ivar,name in enumerate(self.RA2VarNames)]
 
 	def MakeBox(self,bounds,text,fill_style=0):
 		box = TPaveText(bounds[0],bounds[1],bounds[2],bounds[3],"NB")
@@ -275,7 +293,13 @@ class RA2BinSelector():
 			bin_id = []
 			for ivar,name in enumerate(self.RA2VarNames):
 				bin_id.append(self.all_bins[ivar][ibin])
-			self.IDtoBinNumber[tuple(bin_id)] = ibin+1 #bin numbers start at 1
+			bin_id_tuple = tuple(bin_id)
+			self.IDtoBinNumber[bin_id_tuple] = ibin+1 #bin numbers start at 1
+			self.RA2BinNumberToID[ibin+1] = tuple(zip(self.GetMinimums(bin_id_tuple),self.GetMaximums(bin_id_tuple)))
+
+	def printBinIDToBoundaryMapping(self):
+		for key,val in self.RA2BinNumberToID.iteritems():
+			print str(key)+": "+str(val)
 
 def LinePar(s):
     try:
