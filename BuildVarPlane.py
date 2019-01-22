@@ -218,6 +218,7 @@ class RA2BinSelector():
 			if yvar in ["HT","MHT"]:
 				latex.DrawLatex(x_min-0.5*x_padding,self.RA2VarMin[yvar_index][b[1]],"%i"%(self.RA2VarMin[yvar_index][b[1]]))
 			else:
+				if yvar=="BTags" and b[1]==4: continue
 				y_center = 0.5*(boxes[bounds].GetY2()+boxes[bounds].GetY1())
 				if self.RA2VarMax[yvar_index][b[1]] == self.RA2VarMin[yvar_index][b[1]] + 1:
 					text = "%i"%(self.RA2VarMin[yvar_index][b[1]] + 1)

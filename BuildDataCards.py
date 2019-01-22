@@ -39,6 +39,24 @@ ZinvStatDict_ModifiedNBJet_Variation3 = [
     (210, 1.50), #Includes NB=4
 ]
 ZinvStatDict_ModifiedNBJet_Variation3.sort() # list must be sorted
+ZinvStatDict_btagFix2 = [
+    (10, 1.10),
+    (20, 1.10),
+    (30, 1.35),
+    (40, 1.35),
+    (50, 1.10),
+    (60, 1.10),
+    (70, 1.20),
+    (80, 1.50),
+    (90, 1.10),
+    (100, 1.10),
+    (110, 1.30),
+    (120, 1.50),
+    (128, 1.10),
+    (136, 1.20),
+    (184, 1.50),
+]
+ZinvStatDict_btagFix2.sort() # list must be sorted
 ZinvStatLumiValue = 35900.0 # Luminosity at which these values were measured
 
 def which(program):
@@ -79,7 +97,6 @@ def BuildDataCards(options_model_mass):
     LostLepton=fbkg.Get("SLBkgSR");
     GJControl=fbkg.Get("GJControl");
     GJTF=fbkg.Get("TFGJ")
-    bincount=174;
     cardsToCombine=" "
     for i in range(1, ZInv.GetNbinsX()+1):
         fout=open(outdir+"card_searchbin%d.txt" %i, 'w')
@@ -105,6 +122,8 @@ def BuildDataCards(options_model_mass):
         if luminosity != ZinvStatLumiValue:
             if ZInv.GetNbinsX() == 174:
                 ZinvStatUnc = 1.0+((ZinvStatDict[bisect.bisect_right(ZinvStatDict, (i,))][1] - 1.0) * sqrt(ZinvStatLumiValue/luminosity))
+            elif ZInv.GetNbinsX() == 184:
+                ZinvStatUnc = 1.0+((ZinvStatDict_btagFix2[bisect.bisect_right(ZinvStatDict_btagFix2, (1,))][1] - 1.0) * sqrt(ZinvStatLumiValue/luminosity))
             elif ZInv.GetNbinsX() == 210:
                 ZinvStatUnc = 1.0+((ZinvStatDict_ModifiedNBJet_Variation3[bisect.bisect_right(ZinvStatDict_ModifiedNBJet_Variation3, (i,))][1] - 1.0) * sqrt(ZinvStatLumiValue/luminosity))
             else:

@@ -1,1 +1,1 @@
-input_RA2bin_options_original.txt
+input_RA2bin_options_Combination_NJet3_MHT1_HT3_btagFix.txt

@@ -1,8 +1,10 @@
 # Binning Optimization
 
+
+## Where to start?
 Fix the Njet-btag binning to what it is by default and play with just sliding the MHT bins first. Recall the default binning is [CMS-SUS-16-033](http://cms-results.web.cern.ch/cms-results/public-results/publications/SUS-16-033/CMS-SUS-16-033_Figure_002.png).
 
-Rishi would start by just plotting the MHT for the background in the MHT bins above but scale to 140 fb<sup>-1</sup> and see how tight the tightest MHT bin is. Then check the same histograms for the control regions like 1-lepton.
+Rishi would start by just plotting the MHT for the background in the MHT bins above, but scale to 140 fb<sup>-1</sup> and see how tight the tightest MHT bin is. Then check the same histograms for the control regions like 1-lepton.
 
 Start by using only T1tttt
 
@@ -26,52 +28,102 @@ x>vfloat:RA2Var0Min
 x<=vfloat:RA2Var0Max
 ```
 
-Note: The code won’t allow changing MHT/HT plane for each NJet, NBJet combination
+Note: The code won’t allow changing MHT/HT plane for every NJet, NBJet combination. Some combinations just aren't allowed.
 
 The metric we use to determine that one binning option is better than another is the **Combine tool expected limit**. We only use a few systematics, one signal, and a few backgrounds. This should make the process fairly fast.
 
-
 <ol>
 <li>Make a softlink to the correct binning veriation</li>
-```
-ln -sf input_RA2bin_options_original.txt input_RA2bin_options.txt
-ln -sf input_RA2bin_options_ModifiedNJet_variation1.txt input_RA2bin_options.txt
-ln -sf input_RA2bin_options_ModifiedNBJet_variation1.txt input_RA2bin_options.txt
-ln -sf input_RA2bin_options_ModifiedMHT_variation1.txt input_RA2bin_options.txt
-ln -sf input_RA2bin_options_ModifiedHT_variation1.txt input_RA2bin_options.txt
 
-ln -sf input_selection_original.txt input_selection.txt
-ln -sf input_selection_photon_veto.txt input_selection.txt
-```
+#### Modified binning
+<pre>ln -sf input_RA2bin_options_original.txt input_RA2bin_options.txt
+
+Other configurations:
+ln -sf input_RA2bin_options_Combination_NJet1_MHT1_HT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet2_MHT1_HT1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet2_MHT1_HT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_HT1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_HT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1_HT1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1_HT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1_HT2_fix1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1_HT3.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1_HT3_btagFix.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT1_HT3_btagFix2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT3_HT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet3_MHT4_HT4.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_Combination_NJet4_MHT1_HT2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedHT_variation1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedHT_variation2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedMHT_variation1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedMHT_variation2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedMHT_variation3.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedMHT_variation4.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedNBJet_variation1.txt input_RA2bin_options.txt
+    ln -sf input_selection_syst_nobtagsf.txt input_selection_syst.txt
+ln -sf input_RA2bin_options_ModifiedNBJet_variation2.txt input_RA2bin_options.txt
+    ln -sf input_selection_syst_nobtagsf.txt input_selection_syst.txt
+ln -sf input_RA2bin_options_ModifiedNBJet_variation3.txt input_RA2bin_options.txt
+    ln -sf input_selection_syst_nobtagsf.txt input_selection_syst.txt
+ln -sf input_RA2bin_options_ModifiedNJet_variation1.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedNJet_variation2.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_options_ModifiedNJet_variation3.txt input_RA2bin_options.txt</pre>
+
+#### Skim Selections
+<pre>ln -sf input_selection_original.txt input_selection.txt
+ln -sf input_selection_photon_veto.txt input_selection.txt</pre>
+
+#### Additional/Modified Selection Cuts
+<pre>ln -sf input_selection_syst_original.txt input_selection_syst.txt
+ln -sf input_selection_syst_photon_veto.txt input_selection_syst.txt
+ln -sf input_selection_syst_HTDPhiCut.txt input_selection_syst.txt
+ln -sf input_selection_syst_nobtagsf.txt input_selection_syst.txt
+ln -sf input_selection_syst_HTDPhiCut_MHTHTCut.txt input_selection_syst.txt</pre>
+
+#### One of the more difficult configurations (ModifiedNBJet_variation3)
+<pre>ln -sf input_RA2bin_options_ModifiedNBJet_variation3.txt input_RA2bin_options.txt
+ln -sf input_RA2bin_DC_syst_ModifiedNBJet_variation3.txt input_RA2bin_DC_syst.txt
+ln -sf input_RA2bin_DC_systbkg_ModifiedNBJet_variation3.txt input_RA2bin_DC_systbkg.txt
+ln -sf input_selection_syst_nobtagsf.txt input_selection_syst.txt</pre>
 
 <li>Run MakeAllDCsyst for all mass points in python wrapper</li>
 
 For one mass point:
 ```
-root -b -l -q 'MakeAllDCsyst.C+(1,"T1tttt_900_1_fast","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan")'
+root -b -l -q 'MakeAllDCsyst.C+(1,"T1tttt_2100_100_fast","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan")'
 ```
 
-For all mass points:
+For all mass points the previous command becomes:
 ```
-python MakeAllDCsystLoop.py -o ModifiedNJet_variation2/ -s T1tttt T1tttt T1qqqq T1qqqq T1bbbb T1bbbb T2tt T2tt T2qq T2qq T2bb T2bb --mass 2100_100 1600_1200 1900_100 1300_1200 2100_100 1600_1300 1100_50 600_500 1500_100 1100_900 1100_100 600_500
-
-python MakeAllDCsystLoop.py -o tmp -s T1bbbb --mass 2100_100
-
-mv tree_syst_T* RA2bin_*  datacards_fast/ModifiedNJet_variation1/
-mv tree_syst_T* RA2bin_*  datacards_fast/ModifiedNBJet_variation1/
-mv tree_syst_T* RA2bin_*  datacards_fast/ModifiedMHT_variation1/
-mv tree_syst_T* RA2bin_*  datacards_fast/ModifiedHT_variation1/
+python MakeAllDCsystLoop.py -o Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -s T1tttt T1tttt T1tttt T1bbbb T1bbbb T1bbbb T1qqqq T1qqqq T1qqqq T2tt T2tt T2tt T2bb T2bb T2bb T2qq T2qq T2qq --mass 2100_100 1600_1200 1300_1075 2100_100 1600_1300 1300_1275 1900_100 1300_1200 1300_1275 1100_50 600_500 600_513 1100_100 600_500 600_575 1500_100 1100_900 1100_1075
 ```
 
-You will need to mode the files created to a new folder based on the binning (i.e.):
+You will need to move the files created to a new folder based on the binning (i.e.):
 ```
-mv RA2bin_*.root RA2bin_*.stdout datacards_fast/ModifiedNJet_variation1/
+mv RA2bin_*.root RA2bin_*.stdout Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/
+```
+
+If you'd like to visualize the binning changes or selection cut changes you can do something like:
+```
+root -n datacards_fast/NominalBinning/RA2bin_signal_T1bbbb_2100_100_fast.root tmp/T1bbbb_2100_100_nominal/RA2bin_signal_T1bbbb_2100_100_fast.root tmp/T1bbbb_2100_100_photon_veto/RA2bin_signal_T1bbbb_2100_100_fast.root
+
+_file0->cd()
+RA2bin_T1bbbb_2100_100_fast_nominal->SetMarkerColor(kRed)
+RA2bin_T1bbbb_2100_100_fast_nominal->Draw()
+_file1->cd()
+RA2bin_T1bbbb_2100_100_fast_nominal->SetMarkerColor(kBlue)
+RA2bin_T1bbbb_2100_100_fast_nominal->Draw("same")
+_file2->cd()
+RA2bin_T1bbbb_2100_100_fast_nominal->SetMarkerColor(kGreen)
+RA2bin_T1bbbb_2100_100_fast_nominal->Draw("same")
 ```
 
 <li>Run MakeAllDCbkg once</li>
 
 ```
-root -b -l -q 'MakeAllDCBkg.C+(0,"signal,SLe,SLm,LDP,DYe_CleanVars,DYm_CleanVars,GJet_CleanVars","TotalBkg","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12","datacards_syst/NominalBinning/","nominal","",false)'
+root -b -l -q 'MakeAllDCBkg.C+(0,"signal,SLe,SLm,LDP,DYe_CleanVars,DYm_CleanVars,GJet_CleanVars","TotalBkg","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12","datacards_syst/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/","nominal","",false)'
 ```
 
 Makes the MC yields (background) in the signal and control regions. This is the level at which I scan over all of the binning. Some root files need to be hadd’d (the ones with leptons)
@@ -85,9 +137,7 @@ Possible regions are:
 6. SLm
 7. signal 
 
-<br>Run hadd to combine DYe_CleanVars and DYm_CleanVars into DY_CleanVar. Do the same for SLe and SLm into SL.
-
-If running a single region at once, you can use use a loop in bash:
+<br>If running a single region at once, you can use use a loop in bash:
 ```bash
 for reg in "DYe_CleanVars" "DYm_CleanVars" "GJet_CleanVars" "LDP"; do root -b -l -q 'MakeAllDCBkg.C+(0,'$reg',"TotalBkg","root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12","nominal","")'; done
 ```
@@ -112,8 +162,11 @@ Note: Kevin’s version only does the signal region
 <li>Run QuickBkgSystematics once to get all of the bakground histograms</li>
 
 Note: The DY samples were missing from the default version of input/input_sets_DC.txt. Also, only the inclusive TTbar samples was used by default, which has a very low luminosity.
+
+Note 2: The program starts by hadding DYe_CleanVars and DYm_CleanVars into DY_CleanVar and SLe and SLm into SL.
+
 ```
-python QuickBkgSystematics.py -i datacards_syst/ModifiedNJet_variation1/ -o datacards_syst/ModifiedNJet_variation1/ -l 135000 
+python QuickBkgSystematics.py -i datacards_syst/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -o datacards_syst/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -l 135000
 ```
 
 QuickBkgSystematics.py reads output from MakeAllDBBkg_Rishi, compute the TF, splits the CR in > or < N_min and computes deltaB (either gaussian or poison) as the bin error of a histogram of B
@@ -298,24 +351,18 @@ QuickBkgSystematics.py reads output from MakeAllDBBkg_Rishi, compute the TF, spl
 <li>Make datacards for each mass point (will make 174 cards for each bin) and then combine them into one datacard per mass point. Will also run combine by default.</li>
 
 ```
-python BuildDataCards.py
-python BuildDataCards.py -i datacards_fast/ModifiedNJet_variation1/ -j datacards_syst/ModifiedNJet_variation1/ -o datacards/ModifiedNJet_variation1/ -l 135000.0 -m T1tttt T1tttt T1qqqq T1qqqq T2tt T2tt T2qq T2qq --mass 2100_100 1600_1200 1900_100 1300_1200 1100_50 600_500 1500_100 1100_900 -r
-python BuildDataCards.py -i datacards_fast/ModifiedNBJet_variation1/ -j datacards_syst/ModifiedNBJet_variation1/ -o datacards/ModifiedNBJet_variation1/ -l 135000.0 -m T1tttt T1tttt T1qqqq T1qqqq T2tt T2tt T2qq T2qq --mass 2100_100 1600_1200 1900_100 1300_1200 1100_50 600_500 1500_100 1100_900 -r
-python BuildDataCards.py -i datacards_fast/ModifiedMHT_variation1/ -j datacards_syst/ModifiedMHT_variation1/ -o datacards/ModifiedMHT_variation1/ -l 135000.0 -m T1tttt T1tttt T1qqqq T1qqqq T2tt T2tt T2qq T2qq --mass 2100_100 1600_1200 1900_100 1300_1200 1100_50 600_500 1500_100 1100_900 -r
-python BuildDataCards.py -i datacards_fast/ModifiedHT_variation1/ -j datacards_syst/ModifiedHT_variation1/ -o datacards/ModifiedHT_variation1/ -l 135000.0 -m T1tttt T1tttt T1qqqq T1qqqq T2tt T2tt T2qq T2qq --mass 2100_100 1600_1200 1900_100 1300_1200 1100_50 600_500 1500_100 1100_900 -r
-
-python BuildDataCards.py -i datacards_fast/ModifiedNJet_variation2/ -j datacards_syst/ModifiedNJet_variation2/ -o datacards/ModifiedNJet_variation2/ -l 135000.0 -m T1tttt T1tttt T1bbbb T1bbbb T1qqqq T1qqqq T2tt T2tt T2bb T2bb T2qq T2qq --mass 2100_100 1600_1200 2100_100 1600_1300 1900_100 1300_1200 1100_50 600_500 1100_100 600_500 1500_100 1100_900 -r -n 12
+python BuildDataCards.py -i datacards_fast/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -j datacards_syst/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -o datacards/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -l 135000.0 -m T1tttt T1tttt T1tttt T1bbbb T1bbbb T1bbbb T1qqqq T1qqqq T1qqqq T2tt T2tt T2tt T2bb T2bb T2bb T2qq T2qq T2qq --mass 2100_100 1600_1200 1300_1075 2100_100 1600_1300 1300_1275 1900_100 1300_1200 1300_1275 1100_50 600_500 600_513 1100_100 600_500 600_575 1500_100 1100_900 1100_1075 -r -n 18
 ```
 
 To print the limits in some systematic fashion:
 ```
-python WPTable.py -i datacards/ModifiedNJet_variation2/ -M T1tttt T1tttt T1bbbb T1bbbb T1qqqq T1qqqq T2tt T2tt T2bb T2bb T2qq T2qq -m 2100_100 1600_1200 2100_100 1600_1300 1900_100 1300_1200 1100_50 600_500 1100_100 600_500 1500_100 1100_900 --combine_result --sig -d T1tttt=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T1.txt T1bbbb=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T1.txt T1qqqq=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T1.txt T2tt=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T2.txt T2bb=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T2.txt T2qq=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T2qq.txt
+python WPTable.py -i datacards/Combination_NJet3_MHT1_HT3_HTDPhiCut_MHTHTCut_btagFix/ -M T1tttt T1tttt T1tttt T1bbbb T1bbbb T1bbbb T1qqqq T1qqqq T1qqqq T2tt T2tt T2tt T2bb T2bb T2bb T2qq T2qq T2qq -m 2100_100 1600_1200 1300_1075 2100_100 1600_1300 1300_1275 1900_100 1300_1200 1300_1275 1100_50 600_500 600_513 1100_100 600_500 600_575 1500_100 1100_900 1100_1075 -n 3 --combine_result --sig -d T1tttt=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T1.txt T1bbbb=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T1.txt T1qqqq=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T1.txt T2tt=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T2.txt T2bb=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T2.txt T2qq=/uscms_data/d2/aperloff/YOURWORKINGAREA/SUSY/slc7/CMSSW_9_4_10/src/TreeMaker/Production/test/data/dict_xsec_T2qq.txt
 ```
 </ol>
 
 
 ## Optimization Targets
-Optimize T2qq, T1qqqq, T1tttt, T2tt:
+Optimize T1tttt, T1bbbb, T1qqqq, T2tt, T2bb, and T2qq:
 
 &nbsp;&nbsp;&nbsp;&nbsp;Optimize NJets and btags: Pick m<sub>&#x0067; &#x0303;</sub> m<sub>&chi;<sub>1</sub></sub> point for low and high NJets.
 
@@ -476,3 +523,32 @@ MHT: 300-400, 400-500, 500-750, >=750
 
 Variation 4:
 MHT: 300-350, 350-600, 600-750, >=750
+
+## MHT/HT Plane Diagonal Corners
+
+Original (Combination_NJet3_MHT1_HT2)  
+MHT: HT Range  
+300-350 : 300-700, 700-1200, >=1200  
+350-600 : 350-700, 700-1200, >=1200  
+600-850 : 350-700, 700-1200, >=1200  
+&gt;=850   : 750-1700, >=1700  
+
+Raise/Lower MHT to match diagonal (Combination_NJet3_MHT3_HT2)  
+MHT: HT  
+300-350 : 300-700, 700-1200, >=1200  
+350-700 : 350-700, 700-1200, >=1200  
+700-850 : 700-1200, >=1200  
+&gt;=850   : 850-1700, >=1700  
+
+Raise/Lower HT to match diagonal (Combination_NJet3_MHT1_HT3)  
+300-350 : 300-600, 600-1200, >=1200  
+350-600 : 350-600, 600-1200, >=1200  
+600-850 : 600-1200, >=1200  
+&gt;=850   : 850-1700, >=1700  
+
+Meet in the middle (Combination_NJet3_MHT4_HT4)  
+MHT: HT Range  
+300-350 : 300-650, 650-1200, >=1200  
+350-650 : 350-650, 650-1200, >=1200  
+650-850 : 650-1200, >=1200  
+&gt;=850   : 850-1700, >=1700

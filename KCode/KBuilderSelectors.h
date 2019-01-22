@@ -320,7 +320,8 @@ class KMCWeightSelector : public KSelector {
 			}
 			
 			//now do scaling: norm*xsection/nevents
-			if(useTreeWeight && !fastsim) w *= looper->Weight;
+			//if(useTreeWeight && !fastsim) w *= looper->Weight;
+            if(useTreeWeight) w *= looper->Weight;
 			else if(got_nEventProc && nEventProc>0 && got_xsection){
 				w *= xsection/nEventProc;
 				//account for negative weight events
@@ -630,13 +631,14 @@ class KMETFilterSelector : public KSelector {
 	public:
 		//constructor
 		KMETFilterSelector() : KSelector() { }
-		KMETFilterSelector(string name_, OptionMap* localOpt_) : KSelector(name_,localOpt_), skipHTRatio(false) {
+		KMETFilterSelector(string name_, OptionMap* localOpt_) : KSelector(name_,localOpt_) {
 			localOpt->Get("filterfiles",filterfiles);
 			for(unsigned f = 0; f < filterfiles.size(); ++f){
 				filters.push_back(new EventListFilter(filterfiles[f]));
 			}
 			onlydata = localOpt->Get("onlydata",false);
 			filter2015 = localOpt->Get("filter2015",false);
+			skipHTRatio = localOpt->Get("skipHTRatio",false);
 		}
 		virtual void CheckBranches(){
 			looper->fChain->SetBranchStatus("HT",1);
@@ -1003,9 +1005,14 @@ class KHistoSelector : public KSelector {
 								double wb = w;
 								//weight by btag scale factor probability if available
 								if(BTagSF) {
-									int nb = RA2Bin->GetBin("BTags",RA2Bin->RA2binVec[b]);
-									if(nb>=0 && ((unsigned)nb)<BTagSF->prob.size()) wb *= BTagSF->prob[nb];
-									else wb = 0; //btag sf failed
+									double sfsum = 0;
+									float bmin = RA2Bin->GetBinMin("BTags",RA2Bin->RA2binVec[b]);
+									float bmax = RA2Bin->GetBinMax("BTags",RA2Bin->RA2binVec[b]);
+									for(int nb = (int)bmin+1; nb <= (int)bmax; ++nb){
+										if(nb>=BTagSF->prob.size()) break;
+										sfsum += BTagSF->prob[nb];
+									}
+									wb *= sfsum;
 								}
 								values[i].Fill(RA2Bin->RA2bins[b],wb);
 							}
