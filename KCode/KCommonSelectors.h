@@ -1292,4 +1292,59 @@ class KMETFilterSelector : public KSelector {
 };
 REGISTER_SELECTOR(METFilter);
 
+//----------------------------------------------------
+//selects events based upon the jet energy fractions and multiplicities
+class KJetFractionMultiplicitySelector : public KSelector {
+	public:
+		//constructor
+		KJetFractionMultiplicitySelector() : KSelector() { }
+        KJetFractionMultiplicitySelector(string name_, OptionMap* localOpt_) : KSelector(name_,localOpt_), ptmin(30.0), doJER(false) {
+			//check for option
+			localOpt->Get("varnames",varnames);
+            localOpt->Get("cutvalmin",cutvalmin);
+            localOpt->Get("cutvalmax",cutvalmax);
+            localOpt->Get("etamin",etamin);
+            localOpt->Get("etamax",etamax);
+            localOpt->Get("ptmin",ptmin);
+            localOpt->Get("doJER",doJER);
+        }
+		
+		//this selector doesn't add anything to tree
+		
+		//used for non-dummy selectors
+		virtual bool Cut() {
+            bool goodEvent = true;
+
+            for(unsigned v=0; v<varnames.size(); ++v) {
+               for(unsigned j=0; j < looper->Jets->size(); ++j) {
+                  if(looper->Jets->at(j).Pt()<ptmin) continue;
+
+                  if(varnames[v]=="neutralHadronEnergyFraction")      varval = looper->Jets_neutralHadronEnergyFraction->at(j);
+                  else if(varnames[v]=="neutralEmEnergyFraction")     varval = looper->Jets_neutralEmEnergyFraction->at(j);
+                  else if(varnames[v]=="neutralMultiplicity")         varval = looper->Jets_neutralMultiplicity->at(j);
+                  else if(varnames[v]=="chargedHadronEnergyFraction") varval = looper->Jets_chargedHadronEnergyFraction->at(j);
+                  else if(varnames[v]=="chargedEmEnergyFraction")     varval = looper->Jets_chargedEmEnergyFraction->at(j);
+                  else if(varnames[v]=="chargedMultiplicity")         varval = looper->Jets_chargedMultiplicity->at(j);
+                  else if(varnames[v]=="nconstituents")               varval = looper->Jets_neutralMultiplicity->at(j) + looper->Jets_chargedMultiplicity->at(j);
+                  else if(varnames[v]=="muonEnergyFraction")          varval = looper->Jets_muonEnergyFraction->at(j);
+                  if(doJER && varnames[v].find("Fraction")!=string::npos) varval*=looper->Jets_jerFactor->at(j);
+
+                  if(abs(looper->Jets->at(j).Eta())>etamin[v] && abs(looper->Jets->at(j).Eta())<=etamax[v] && (varval<=cutvalmin[v] || varval>=cutvalmax[v])) {
+                     goodEvent = false;
+                     break;
+                  }
+               }
+               if(!goodEvent) break;
+            }
+			return goodEvent;
+		}
+	
+		//member variables
+       vector<string> varnames;
+       vector<double> etamin, etamax, cutvalmin, cutvalmax;
+       double ptmin, varval;
+       bool doJER;
+};
+REGISTER_SELECTOR(JetFractionMultiplicity);
+
 #endif
