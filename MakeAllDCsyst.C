@@ -30,7 +30,7 @@ string changeHistoName(string name, string suff){
 
 //recompile:
 //root -b -l -q MakeAllDCsyst.C++
-void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11", string systTypes="nominal,scaleuncUp,scaleuncDown,isruncUp,isruncDown,triguncUp,triguncDown,btagSFuncUp,btagSFuncDown,mistagSFuncUp,mistagSFuncDown,isotrackuncUp,isotrackuncDown,lumiuncUp,lumiuncDown,prefireuncUp,prefireuncDown", string varTypes="JECup,JECdown,JERup,JERdown"){
+void MakeAllDCsyst(int mode=-1, string region="nominal", string setname="", string indir="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11", string systTypes="nominal,scaleuncUp,scaleuncDown,isruncUp,isruncDown,triguncUp,triguncDown,btagSFuncUp,btagSFuncDown,mistagSFuncUp,mistagSFuncDown,isotrackuncUp,isotrackuncDown,lumiuncUp,lumiuncDown,prefireuncUp,prefireuncDown", string varTypes="JECup,JECdown,JERup,JERdown"){
 	gErrorIgnoreLevel = kBreak;
 	
 	if(mode==-1){
@@ -40,7 +40,6 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	
 	if(indir[indir.size()-1] != '/') indir = indir + "/";
 	string inpre = "tree_";
-	string region = "signal";
 	string outpre = "RA2bin_";
 	string outdir = "";
 	string input = "input/input_RA2bin_DC_syst.txt";
@@ -54,12 +53,12 @@ void MakeAllDCsyst(int mode=-1, string setname="", string indir="root://cmseos.f
 	
 	if(mode==1){
 		outdir = "datacards_fast/";
-		setlist = "input/fast/input_set_DC_"+setname+".txt";
+		setlist = "input/fast/input_sets_DC_"+setname+".txt";
 		osuff = "_"+setname;
 	}
 	else {
 		outdir = "datacards_syst/";
-		setlist = "input/input_set_DC_"+setname+".txt";
+		setlist = "input/input_sets_DC_"+setname+".txt";
 		osuff = "_"+setname;
 	}
 	
