@@ -1,0 +1,16 @@
+#available varnames are (full=abbrev):
+#	nef=neutralEmEnergyFraction
+#	nhf=neutralHadronEnergyFraction
+#	nm=neutralMultiplicity
+#	cef=chargedEmEnergyFraction
+#	chf=chargedHadronEnergyFraction
+#	cm=chargedMultiplicity
+#	nc=nconstituents
+#	mf=muonEnergyFraction
+
+vstring:varnames[ nef, nhf,   nc,  chf,   cm,  nef,   nm,  nef,  nhf,   nm]
+vdouble:etamin[   0.0, 0.0,  0.0,  0.0, 0.0 ,  2.7,  2.7,  3.0,  3.0,  3.0]
+vdouble:etamax[   2.7, 2.7,  2.7,  2.4, 2.4 ,  3.0,  3.0,  5.0,  5.0,  5.0]
+vdouble:cutvalmin[ -1,  -1,    1,    0,    0, -1.0,   -1, -1.0, 0.02,   10]
+vdouble:cutvalmax[0.9, 0.9, 9999, 9999, 9999, 0.99, 9999,  0.9, 9999, 9999]
+double:ptmin[30.0]
