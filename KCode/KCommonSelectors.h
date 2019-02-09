@@ -1298,7 +1298,7 @@ class KJetFractionMultiplicitySelector : public KSelector {
 	public:
 		//constructor
 		KJetFractionMultiplicitySelector() : KSelector() { }
-        KJetFractionMultiplicitySelector(string name_, OptionMap* localOpt_) : KSelector(name_,localOpt_), ptmin(30.0), doJER(false) {
+        KJetFractionMultiplicitySelector(string name_, OptionMap* localOpt_) : KSelector(name_,localOpt_) {
 			//check for option
 			localOpt->Get("varnames",varnames);
             localOpt->Get("cutvalmin",cutvalmin);
@@ -1306,10 +1306,20 @@ class KJetFractionMultiplicitySelector : public KSelector {
             localOpt->Get("etamin",etamin);
             localOpt->Get("etamax",etamax);
             localOpt->Get("ptmin",ptmin);
-            localOpt->Get("doJER",doJER);
+            doJER = localOpt->Get("doJER",false);
         }
 		
-		//this selector doesn't add anything to tree
+		virtual void CheckBranches(){
+			looper->fChain->SetBranchStatus("Jets",1);
+			looper->fChain->SetBranchStatus("Jets_neutralHadronEnergyFraction",1);
+			looper->fChain->SetBranchStatus("Jets_neutralEmEnergyFraction",1);
+			looper->fChain->SetBranchStatus("Jets_neutralMultiplicity",1);
+			looper->fChain->SetBranchStatus("Jets_chargedHadronEnergyFraction",1);
+			looper->fChain->SetBranchStatus("Jets_chargedEmEnergyFraction",1);
+			looper->fChain->SetBranchStatus("Jets_chargedMultiplicity",1);
+			looper->fChain->SetBranchStatus("Jets_muonEnergyFraction",1);
+			if(doJER) looper->fChain->SetBranchStatus("Jets_jerFactor",1);
+		}
 		
 		//used for non-dummy selectors
 		virtual bool Cut() {
