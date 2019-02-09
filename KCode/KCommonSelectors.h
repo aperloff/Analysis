@@ -1312,11 +1312,12 @@ class KJetFractionMultiplicitySelector : public KSelector {
 										 "chargedEmEnergyFraction","chargedHadronEnergyFraction","chargedMultiplicity",
 										 "nconstituents","muonEnergyFraction","nef","nhf","nm","cef","chf","cm","nc","mf"};
 
-			for(v : varnames) {
-				if (std::find(varoptions.begin(), varoptions.end(), varnames) == varoptions.end()) {
+			for(auto v : varnames) {
+				if (std::find(varoptions.begin(), varoptions.end(), v) == varoptions.end()) {
 					std::cout << "Input error: variable name " << v << " unknown" << endl;
 				}
 			}
+		}
 		
 		virtual void CheckBranches(){
 			looper->fChain->SetBranchStatus("Jets",1);
@@ -1346,7 +1347,7 @@ class KJetFractionMultiplicitySelector : public KSelector {
 					else if(varnames[v]=="chargedMultiplicity" || varnames[v]=="cm")          varval = looper->Jets_chargedMultiplicity->at(j);
 					else if(varnames[v]=="nconstituents" || varnames[v]=="nc")                varval = looper->Jets_neutralMultiplicity->at(j) + looper->Jets_chargedMultiplicity->at(j);
 					else if(varnames[v]=="muonEnergyFraction" || varnames[v]=="mf")           varval = looper->Jets_muonEnergyFraction->at(j);
-					if(doJER && (varnames[v].find("Fraction")!=string::npos || varnames[v].back()=="f")) varval*=looper->Jets_jerFactor->at(j);
+					if(doJER && (varnames[v].find("Fraction")!=string::npos || varnames[v].back()=='f')) varval*=looper->Jets_jerFactor->at(j);
 
 					if(abs(looper->Jets->at(j).Eta())>etamin[v] && abs(looper->Jets->at(j).Eta())<=etamax[v] && (varval<=cutvalmin[v] || varval>=cutvalmax[v])) {
 						goodEvent = false;
