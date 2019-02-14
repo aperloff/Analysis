@@ -1,3 +1,5 @@
+#option format is: type:name[val] or vtype:name[val1,val2,...]
+#available types are (full/abbrev): bool/b, int/i, double/d, string/s, color/c
 #available varnames are (full=abbrev):
 #	nef=neutralEmEnergyFraction
 #	nhf=neutralHadronEnergyFraction
@@ -7,6 +9,8 @@
 #	cm=chargedMultiplicity
 #	nc=nconstituents
 #	mf=muonEnergyFraction
+#Example (equivalent to the "JetID" selector):
+#   JetFractionMultiplicity		vs:varnames[neutralEmEnergyFraction,neutralHadronEnergyFraction,nconstituents,chargedHadronEnergyFraction,chargedMultiplicity,neutralEmEnergyFraction,neutralMultiplicity,neutralEmEnergyFraction,neutralHadronEnergyFraction,neutralMultiplicity] vd:cutvalmin[-1,-1,1,0,0,-1.0,-1,-1.0,0.02,10] vd:cutvalmax[0.9,0.9,9999,9999,9999,0.99,9999,0.9,9999,9999] vd:etamin[0.0,0.0,0.0,0.0,0.0,2.7,2.7,3.0,3.0,3.0] vd:etamax[2.7,2.7,2.7,2.4,2.4,3.0,3.0,5.0,5.0,5.0]  d:ptmin[30.0]   b:doJER[1]
 
 vstring:varnames[ nef, nhf,   nc,  chf,   cm,  nef,   nm,  nef,  nhf,   nm]
 vdouble:etamin[   0.0, 0.0,  0.0,  0.0, 0.0 ,  2.7,  2.7,  3.0,  3.0,  3.0]

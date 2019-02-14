@@ -33,7 +33,7 @@ ra2bin
 #	PileupAcc	s:name[PileupAccAfter]	i:cut[20]	i:xnum[101]	d:xmin[-0.5]	d:xmax[100.5]	s:depname[PileupAccBefore]
 evtclean
 #	JetID
-	JetFractionMultiplicity	vs:varnames[neutralEmEnergyFraction,neutralHadronEnergyFraction,nconstituents,chargedHadronFraction,chargedMultiplicity,neutralEmEnergyFraction,neutralMultiplicity,neutralEmEnergyFraction,neutralHadronEnergyFraction,neutralMultiplicity]	vd:cutvalmin[-1,-1,1,0,0,0.02,2,-1.0,0.02,10]	vd:cutvalmax[0.9,0.9,9999,9999,9999,0.99,9999,0.9,9999,9999]	vd:etamin[0.0,0.0,0.0,0.0,0.0,2.7,2.7,3.0,3.0,3.0]	vd:etamax[2.7,2.7,2.7,2.4,2.4,3.0,3.0,5.0,5.0,5.0]	d:ptmin[30.0]	b:doJER[0]
+	JetFractionMultiplicity	in:options[input/input_PFJetID_options.txt]	b:doJER[1]
 	METRatio	b:tag[1]
 	MuonJet	b:tag[1]
 	FakeJet	b:tag[1]
