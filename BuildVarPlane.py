@@ -155,7 +155,7 @@ class RA2BinSelector():
 		yvar_index = self.RA2VarNames.index(yvar)
 		is_htmht = xvar=="HT" and yvar=="MHT"
 
-		control_offset = 50
+		control_offset = 50 if self.args.control_region else 0
 		x_min = self.RA2VarMin[xvar_index][0]
 		y_min = self.RA2VarMin[yvar_index][0]-control_offset if is_htmht else self.RA2VarMin[yvar_index][0]
 
@@ -175,6 +175,8 @@ class RA2BinSelector():
 		#Draw a box for each bin
 		latex = TLatex()
 		latex.SetTextAlign(22)
+		latex.SetTextFont(62)
+		latex.SetTextSize(0.05)
 		boxes = {}
 		fills = {}
 		hashes = {}
@@ -188,20 +190,21 @@ class RA2BinSelector():
 				fills[bounds] = self.MakeBox(bounds,"",1001)
 				boxes[bounds] = self.MakeBox(bounds,"%i"%(b[0]+1) if is_htmht else "%i"%(len(boxes)+1))
 				#Make a hashed box if b[0] in [0,3]
-				if b[0] in [0,3] and is_htmht:
+				if b[0] in [0,3] and is_htmht and not args.nohash:
 					hashes[bounds] = self.MakeHashedBox(bounds)
-			#Append another box for control region if y_min == global y_min
-			if self.RA2VarMin[yvar_index][b[1]] == y_min+control_offset and is_htmht:
-				bounds = (self.RA2VarMin[xvar_index][b[0]],self.RA2VarMin[yvar_index][b[1]]-control_offset,
-						  self.RA2VarMax[xvar_index][b[0]] if self.RA2VarMax[xvar_index][b[0]] not in [99,9999] else self.args.VarMax[xvar_index],
-						  self.RA2VarMin[yvar_index][b[1]])
-				tpt = boxes.get(bounds)
-				if tpt == None:
-					fills[bounds] = self.MakeBox(bounds,"",1001)
-					boxes[bounds] = self.MakeBox(bounds,"C%i"%(b[0]+1))
-					#Make a hashed box if b[0] in [0,3]
-					if b[0] in [0,3] and is_htmht:
-						hashes[bounds] = self.MakeHashedBox(bounds)
+			if self.args.control_region:
+				#Append another box for control region if y_min == global y_min
+				if self.RA2VarMin[yvar_index][b[1]] == y_min+control_offset and is_htmht:
+					bounds = (self.RA2VarMin[xvar_index][b[0]],self.RA2VarMin[yvar_index][b[1]]-control_offset,
+							  self.RA2VarMax[xvar_index][b[0]] if self.RA2VarMax[xvar_index][b[0]] not in [99,9999] else self.args.VarMax[xvar_index],
+							  self.RA2VarMin[yvar_index][b[1]])
+					tpt = boxes.get(bounds)
+					if tpt == None:
+						fills[bounds] = self.MakeBox(bounds,"",1001)
+						boxes[bounds] = self.MakeBox(bounds,"C%i"%(b[0]+1))
+						#Make a hashed box if b[0] in [0,3]
+						if b[0] in [0,3] and is_htmht and not args.nohash:
+							hashes[bounds] = self.MakeHashedBox(bounds)
 			#Draw axis labels
 			if xvar in ["HT","MHT"]:
 				if b[0]!=3 or xvar!="HT":
@@ -312,24 +315,27 @@ def LinePar(s):
         raise argparse.ArgumentTypeError("Must specify the two variables being drawn (order matters), the slope, and the y-intercept of the line.")
 
 if __name__ == "__main__":
-	'''
-	Examples of how to run:
-	           2016: python BuildVarPlane.py -i input/input_RA2bin_options_original.txt -s plane_2016.pdf
-	NJets3_MHT1_HT2: python BuildVarPlane.py -i input/input_RA2bin_options_Combination_NJet3_MHT1_HT2.txt -s plane_NJet3_MHT1_HT2.pdf -M 11 3 1100 2200
-	NJets3_MHT1_HT3: python BuildVarPlane.py -i input/input_RA2bin_options_Combination_NJet3_MHT1_HT3.txt -s plane_proposed.pdf -c HT,MHT,1.0,0.0 -M 11 3 1100 2200
-
-	VarMax by configuration:
-	           2016: 10 3 1000 2100
-	NJets3_MHT1_HT2: 11 3 1100 2200
-	NJets3_MHT1_HT3: 11 3 1100 2200
-	'''
-
 	# Read parameters
-	parser = argparse.ArgumentParser(description='Draw the bin variable planes.')
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+					 description='''
+Draw the bin variable planes.
+
+Examples of how to run:
+                   2016: python BuildVarPlane.py -i input/input_RA2bin_options_original.txt -s plane_2016.pdf
+        NJets3_MHT1_HT2: python BuildVarPlane.py -i input/input_RA2bin_options_Combination_NJet3_MHT1_HT2.txt -s plane_NJet3_MHT1_HT2.pdf -M 11 3 1100 2200
+        NJets3_MHT1_HT3: python BuildVarPlane.py -i input/input_RA2bin_options_Combination_NJet3_MHT1_HT3.txt -s plane_proposed.pdf -c HT,MHT,1.0,0.0 -M 11 3 1100 2200
+
+VarMax by configuration:
+                   2016: 10 3 1000 2100
+        NJets3_MHT1_HT2: 11 3 1100 2200
+        NJets3_MHT1_HT3: 11 3 1100 2200
+''')
 	parser.add_argument("-c", "--cutline",        type=LinePar, nargs='+',                       help="Add a line showing a cut along the plane with slope and y-intercept (default = %(default)s)")
+	parser.add_argument("-C", "--control_region", action='store_true',                           help="Add control regions (default = %(default)s)")
 	parser.add_argument("-d", "--debug",          action='store_true',                           help="Print extra debugging options (default = %(default)s)")
 	parser.add_argument("-i", "--infile",         default='input/input_RA2bin_options.txt',      help="File containing the input bin mapping (default = %(default)s)")
 	parser.add_argument("-M", "--VarMax",         default=[10,3,1000,2100], type=int, nargs='+', help="Maximum values for drawing purposes (default = %(default)s)")
+	parser.add_argument("-n", "--nohash",         action='store_true',                           help="Turn of the hashing (default = %(default)s)")
 	parser.add_argument("-s", "--suffix",         default="plane.pdf",                           help="Output filename suffix (default = %(default)s)")
 
 	args, unknown = parser.parse_known_args()
