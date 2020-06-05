@@ -1,0 +1,14 @@
+OPTION
+vstring:numers[T2tt_175_1_MC2017_fast]
+vstring:denoms[T2tt_175_1_MC2017]
+
+HISTO
+njets	i:xnum[10]	d:xmin[0]	d:xmax[10]	s:xtitle[N_{jet}]	s:ytitle[a.u.]	b:ratio[1]	c:color[kOrange + 7]
+
+SET
+hist	mc	TTJets_MC2017	s:legname[TTJets_MC2017]	c:color[kBlack]	i:linestyle[1]
+	base	ext	TTJets_MC2017	vs:exthisto_in[njets_TTJets_MC2017]	vs:exthisto_out[njets]
+hist	mc	T2tt_175_1_MC2017	s:legname[T2tt_175_1_MC2017]	c:color[kRed]	i:linestyle[1]
+	base	ext	T2tt_175_1_MC2017	vs:exthisto_in[njets_T2tt_175_1_MC2017]	vs:exthisto_out[njets]
+hist	mc	T2tt_175_1_MC2017_fast	s:legname[T2tt_175_1_MC2017_fast]	c:color[kRed]	i:linestyle[2]
+	base	ext	T2tt_175_1_MC2017_fast	vs:exthisto_in[njets_T2tt_175_1_MC2017_fast]	vs:exthisto_out[njets]

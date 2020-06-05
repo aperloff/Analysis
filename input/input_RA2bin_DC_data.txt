@@ -19,6 +19,11 @@ double:NdivX[518]
 vstring:disable_branches[*]
 bool:debugcut[1]
 bool:appendsel[0]
+vstring:numers[<names of sets>]
+vstring:denoms[<names of sets>]
+string:rationame[Full/Fast]
+double:ratiomin[0]
+double:ratiomax[2]
 
 SELECTION
 ra2common
@@ -49,3 +54,8 @@ ra2bin2018HEM
 
 HISTO
 RA2bin	i:xnum[174]	d:xmin[0.5]	d:xmax[174.5]	s:xtitle[RA2 bin [^{}n_{j},^{}n_{b},^{}H_{T}^{miss},^{}H_{T}]]	s:ytitle[number of events]	b:ratio[0]	b:xbinlabel[1]
+mht	i:xnum[20]	d:xmin[0]	d:xmax[4000]	s:xtitle[H_{T}^{miss} [GeV]]	s:ytitle[number of events]	b:ratio[1]
+ht	i:xnum[20]	d:xmin[0]	d:xmax[4000]	s:xtitle[H_{T} [GeV]]	s:ytitle[number of events]	b:ratio[1]
+nbjet	i:xnum[10]	d:xmin[0]	d:xmax[10]	s:xtitle[N_{b-jet}]	s:ytitle[number of events]	b:ratio[1]
+njet	i:xnum[10]	d:xmin[0]	d:xmax[10]	s:xtitle[N_{jet}]	s:ytitle[number of events]	b:ratio[1]
+

@@ -1,0 +1,22 @@
+OPTION
+vstring:numers[T2tt_175_1_MC2017_fast,T2tt_175_1_MC2017_fast_gen]
+vstring:denoms[T2tt_175_1_MC2017,T2tt_175_1_MC2017_gen]
+
+HISTO
+mht	i:xnum[40]	d:xmin[0]	d:xmax[1000]	s:xtitle[H_{T}^{miss} [GeV]]	s:ytitle[a.u.]	b:ratio[1]	c:color[kCyan + 2]
+
+SET
+hist	mc	TTJets_MC2017	s:legname[TTJets]	c:color[kBlack]	i:linestyle[1]
+	base	ext	TTJets_MC2017	vs:exthisto_in[mht_TTJets_MC2017]	vs:exthisto_out[mht]
+hist	mc	TTJets_MC2017_gen	s:legname[TTJets (Gen)]	c:color[kGray]	i:linestyle[1]
+	base	ext	TTJets_MC2017_gen	vs:exthisto_in[genmht_TTJets_MC2017]	vs:exthisto_out[mht]
+
+hist	mc	T2tt_175_1_MC2017	s:legname[T2tt_175_1]	c:color[kRed]	i:linestyle[1]
+	base	ext	T2tt_175_1_MC2017	vs:exthisto_in[mht_T2tt_175_1_MC2017]	vs:exthisto_out[mht]
+hist	mc	T2tt_175_1_MC2017_gen	s:legname[T2tt_175_1 (Gen)]	c:color[kBlue]	i:linestyle[1]
+	base	ext	T2tt_175_1_MC2017_gen	vs:exthisto_in[genmht_T2tt_175_1_MC2017]	vs:exthisto_out[mht]
+
+hist	mc	T2tt_175_1_MC2017_fast	s:legname[T2tt_175_1_fast]	c:color[kRed]	i:linestyle[2]
+	base	ext	T2tt_175_1_MC2017_fast	vs:exthisto_in[mht_T2tt_175_1_MC2017_fast]	vs:exthisto_out[mht]
+hist	mc	T2tt_175_1_MC2017_fast_gen	s:legname[T2tt_175_1_fast (Gen)]	c:color[kBlue]	i:linestyle[2]
+	base	ext	T2tt_175_1_MC2017_fast_gen	vs:exthisto_in[genmht_T2tt_175_1_MC2017_fast]	vs:exthisto_out[mht]

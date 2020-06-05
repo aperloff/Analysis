@@ -1,0 +1,6 @@
+SET
+base	skim	SMS-T2tt_3J_xqcut-20_mStop-175_mLSP-1_MC2017_block0	u:block[0]	b:chain[1]	ch:filenames[Fall17.SMS-T2tt_3J_xqcut-20_mStop-175_mLSP-1_TuneCP5_13TeV-madgraphMLM-pythia8_,0,38,_RA2AnalysisTree.root]	s:chainsuff[/TreeMaker2/PreSelection]	b:data[0]
+base	skim	SMS-T2tt_3J_xqcut-20_mStop-250_mLSP-50_MC2017_block0	u:block[0]	b:chain[1]	ch:filenames[Fall17.SMS-T2tt_3J_xqcut-20_mStop-250_mLSP-50_TuneCP5_13TeV-madgraphMLM-pythia8_,0,44,_RA2AnalysisTree.root]	s:chainsuff[/TreeMaker2/PreSelection]	b:data[0]
+base	skim	SMS-T2tt_3J_xqcut-20_mStop-250_mLSP-75_MC2017_block0	u:block[0]	b:chain[1]	ch:filenames[Fall17.SMS-T2tt_3J_xqcut-20_mStop-250_mLSP-75_TuneCP5_13TeV-madgraphMLM-pythia8_,0,39,_RA2AnalysisTree.root]	s:chainsuff[/TreeMaker2/PreSelection]	b:data[0]
+base	skim	SMS-T2tt_3J_xqcut-20_mStop-250_mLSP-100_MC2017_block0	u:block[0]	b:chain[1]	ch:filenames[Fall17.SMS-T2tt_3J_xqcut-20_mStop-250_mLSP-100_TuneCP5_13TeV-madgraphMLM-pythia8_,0,40,_RA2AnalysisTree.root]	s:chainsuff[/TreeMaker2/PreSelection]	b:data[0]
+base	skim	SMS-T2tt_3J_xqcut-20_mStop-700_mLSP-525_MC2017_block0	u:block[0]	b:chain[1]	ch:filenames[Fall17.SMS-T2tt_3J_xqcut-20_mStop-700_mLSP-525_TuneCP5_13TeV-madgraphMLM-pythia8_,0,41,_RA2AnalysisTree.root]	s:chainsuff[/TreeMaker2/PreSelection]	b:data[0]

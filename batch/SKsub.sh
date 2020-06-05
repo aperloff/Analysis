@@ -5,7 +5,7 @@ source exportProd.sh
 JOBDIR=jobs
 JOBTYPE=skim
 INPUT=input/input_selection.txt
-SELTYPE1=signal
+SELTYPE1=baseline,signal
 SELTYPE2=signalSideband,LDP,SLm,SLe,SLmLDP,SLeLDP,GJet_CleanVars,GJetLDP_CleanVars,GJetLoose_CleanVars,GJetLooseLDP_CleanVars,DYm_CleanVars,DYe_CleanVars,DYmLDP_CleanVars,DYeLDP_CleanVars
 SELTYPE3=signal_JECup,signal_JECdown,signal_JERup,signal_JERdown
 SELTYPE4=signal_genMHT,SLm,SLe,SLm_genMHT,SLe_genMHT

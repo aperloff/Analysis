@@ -189,6 +189,15 @@ class KFiller_ht : public KFiller {
 };
 REGISTER_FILLER(ht);
 
+//sum of jet pt
+class KFiller_genht : public KFiller {
+	public:
+		using KFiller::KFiller;
+		virtual void ListBranches() { branches = {"GenHT"}; }		
+		virtual void Fill(KValue& value, double w) { value.Fill(looper->GenHT,w); }
+};
+REGISTER_FILLER(genht);
+
 //missing hadronic energy
 class KFiller_mht : public KFiller {
 	public:

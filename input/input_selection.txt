@@ -249,6 +249,8 @@ INPUT
 input/input_sets_skim_mc_2016.txt
 input/input_sets_skim_mc_2017.txt
 input/input_sets_skim_mc_2018.txt
+input/input_sets_skim_mc_2017_top_corridor.txt
+input/input_sets_skim_mc_2018_top_corridor.txt
 input/input_sets_skim_signal_2016.txt
 input/input_sets_skim_signal_2017.txt
 input/input_sets_skim_data_2016.txt
